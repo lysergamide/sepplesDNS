@@ -7,4 +7,7 @@ include_directories(include)
 add_executable(
   sepplesDNS
   ./src/main.cpp
+  ./src/DnsHeader.cpp
+  ./src/PacketBuffer.cpp
+  ./src/ResultCode.cpp
 )

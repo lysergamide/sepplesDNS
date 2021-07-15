@@ -1,42 +1,30 @@
-#include <array>
-#include <optional>
+#pragma once
 
+#include <array>
+#include <string>
+
+/**
+ * @brief Class for holding and processing packets
+ */
 class PacketBuffer
 {
-    std::array<uint8_t, 512> buffer;
-    size_t                   pos;
+ private:
+  std::array<uint8_t, 512> buffer;
+  size_t                   pos;
 
-   public:
-    PacketBuffer() : buffer {}, pos { 0 } {};
+  auto step(const size_t) -> void;
+  auto seek(const size_t) -> void;
+  auto get(const size_t) const -> uint8_t;
+  auto read() -> uint8_t;
+  auto get_range(const size_t, const size_t) const -> std::string_view;
 
-   private:
-    /// @param step amount to increment #pos by
-    auto step(const size_t step) -> void { this->pos += step; }
+ public:
+  PacketBuffer();
 
-    /// @param next_pos position to move #pos to
-    auto seek(const size_t next_pos) -> void { this->pos = next_pos; }
+  auto get_pos() const -> size_t;
+  auto read_u16() -> uint16_t;
+  auto read_u32() -> uint32_t;
+  auto read_qname() -> std::string;
 
-    /**
-     * @brief read a byte and increment #pos
-     * @return std::optional<uint8_t>
-     */
-    auto read() -> std::optional<uint8_t>
-    {
-        if (this->pos > 512)
-            return {};
-        else
-            return buffer[this->pos++];
-    }
-
-    /**
-     * @brief read a byte
-     * @return std::optional<uint8_t>
-     */
-    auto get() const -> std::optional<uint8_t>
-    {
-        if (this->pos > 512)
-            return {};
-        else
-            return buffer[this->pos];
-    }
+  friend auto operator<<(std::ostream&, const PacketBuffer&) -> std::ostream&;
 };
