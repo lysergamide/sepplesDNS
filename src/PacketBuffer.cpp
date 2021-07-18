@@ -9,6 +9,19 @@ auto PacketBuffer::step(const size_t step) -> void { pos += step; }
 auto PacketBuffer::seek(const size_t next_pos) -> void { pos = next_pos; }
 
 /**
+ * @brief read a byte #pos is incremented
+ * @exception std::out_of_range
+ * @return uint8_t
+ */
+auto PacketBuffer::read() -> uint8_t
+{
+  if (pos >= 512)
+    throw std::out_of_range("#pos out of bounds");
+
+  return buffer[pos++];
+}
+
+/**
  * @brief read a byte at an arbitrary location
  * @param i index to read from
  * @exception std::out_of_range
@@ -20,19 +33,6 @@ auto PacketBuffer::get(size_t i) const -> uint8_t
     throw std::out_of_range("index out of bounds");
 
   return buffer[i];
-}
-
-/**
- * @brief read a byte #pos is incremented
- * @exception std::out_of_range
- * @return uint8_t
- */
-auto PacketBuffer::read() -> uint8_t
-{
-  if (pos >= 512)
-    throw std::out_of_range("#pos out of bounds");
-
-  return buffer[pos++];
 }
 
 /**
@@ -63,7 +63,9 @@ auto PacketBuffer::get_pos() const -> size_t { return pos; }
  */
 auto PacketBuffer::read_u16() -> uint16_t
 {
-  return static_cast<uint16_t>((read() << 8) | read());
+  const auto a = uint16_t { read() };
+  const auto b = uint16_t { read() };
+  return (a << 8) | b;
 }
 
 /**
@@ -94,8 +96,8 @@ auto PacketBuffer::read_qname() -> std::string
   auto p      = pos;  // duplicate pointer to handle jumps
   auto jumps  = 0;
   auto jumped = false;
-  auto delim  = std::string {};
-  auto ret    = std::string {};  // string to be returned
+  auto delim  = std::string { "" };
+  auto ret    = std::string { "" };  // string to be returned
 
   for (;;) {
     // guards against malicious packets
@@ -107,11 +109,11 @@ auto PacketBuffer::read_qname() -> std::string
     if ((len & 0xc0) == 0xc0) {
       // update buffer position, only needs to be done the first time we jump
       if (!jumped)
-        seek(pos + 2);
+        seek(p + 2);
 
-      p = (static_cast<uint16_t>(len & 0xc0) << 8) | get(p + 1);
-      ++jumps;
+      p      = ((static_cast<uint16_t>(len) ^ 0xc0) << 8) | get(p + 1);
       jumped = true;
+      ++jumps;
     } else {
       ++p;
 
@@ -121,7 +123,7 @@ auto PacketBuffer::read_qname() -> std::string
       ret.append(delim);
       ret.append(get_range(p, len));
       delim = ".";  // start with no delimiter then add dots between subdomains
-      pos += len;
+      p += len;
     }
   }
 
@@ -137,7 +139,7 @@ auto operator<<(std::ostream& os, const PacketBuffer& pb) -> std::ostream&
   os << "<PacketBuffer{ Pos:" << pb.pos << ", Buffer: [";
   std::copy(pb.buffer.begin(),
             pb.buffer.end(),
-            std::ostream_iterator<uint8_t>(os, " "));
+            std::ostream_iterator<int>(os, " "));
   os << "] }>";
 
   return os;

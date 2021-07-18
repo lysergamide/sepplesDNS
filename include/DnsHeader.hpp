@@ -7,7 +7,7 @@
 
 class DnsHeader
 {
- private:
+ public:
   uint16_t id;
 
   bool    recursion_desired;
@@ -37,11 +37,8 @@ class DnsHeader
    * @exception std::out_of_range if there is a problem reading the buffer
    * @param buffer
    */
-  template <class PB>
-  DnsHeader::DnsHeader(const PB&& buffer)
+  template <class PB> DnsHeader(PB&& buffer) : id { buffer.read_u16() }
   {
-    id = buffer.read_u16();
-
     const auto flags = buffer.read_u16();
     const auto upper = flags >> 8;
     const auto lower = flags & 0xff;
@@ -52,7 +49,7 @@ class DnsHeader
     opcode               = (upper >> 3) & 0xf;
     response             = (upper >> 7) & 1;
 
-    rescode             = Rescode::from_num(lower & 0xf);
+    rescode             = ResultCode::from_num(lower & 0xf);
     checking_disabled   = (lower >> 4) & 1;
     authed_data         = (lower >> 5) & 1;
     z                   = (lower >> 6) & 1;

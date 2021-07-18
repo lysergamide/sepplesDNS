@@ -20,8 +20,7 @@ DnsHeader::DnsHeader()
     , answers { 0 }
     , authoritative_entries { 0 }
     , resource_entries { 0 }
-{
-}
+{}
 
 /// @brief make class printable
 auto operator<<(std::ostream& os, const DnsHeader& h) -> std::ostream&
@@ -29,6 +28,7 @@ auto operator<<(std::ostream& os, const DnsHeader& h) -> std::ostream&
   // jfc
 
   os << "<DNS Header{\n"
+     << "  id: " << h.id << "\n"
      << "  recursion_desired: " << h.recursion_desired << "\n"
      << "  truncated_message: " << h.truncated_message << "\n"
      << "  authoritative_answer: " << h.authoritative_answer << "\n"

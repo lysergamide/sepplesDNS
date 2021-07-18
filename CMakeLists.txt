@@ -8,6 +8,10 @@ add_executable(
   sepplesDNS
   ./src/main.cpp
   ./src/DnsHeader.cpp
+  ./src/DnsRecord.cpp
+  ./src/DnsPacket.cpp
+  ./src/DnsQuestion.cpp
   ./src/PacketBuffer.cpp
   ./src/ResultCode.cpp
+  ./src/QueryType.cpp
 )
