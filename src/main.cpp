@@ -1,23 +1,19 @@
-#include <DnsHeader.hpp>
 #include <DnsPacket.hpp>
 
 #include <fmt/printf.h>
 
 #include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <iterator>
-#include <vector>
-
-using namespace std;
-using namespace fmt;
 
 auto main() -> int
 {
+  using namespace std;
+  using namespace fmt;
 
   try {
-    auto pb = PacketBuffer {};
-    auto fs = ifstream("response_packet.txt", ios_base::binary);
+    auto pb = ByteBuffer {};
+    auto fs = ifstream("query_packet.txt", ios_base::binary);
 
     copy(istream_iterator<char>(fs),
          istream_iterator<char>(),
@@ -33,12 +29,6 @@ auto main() -> int
       for (const auto& x : r)
         print("{}\n", x);
     }
-    //    for (auto& a : packet.answers)
-    //      std::cout << a << '\n';
-    //    for (auto& a : packet.authorities)
-    //      std::cout << a << '\n';
-    //    for (auto& r : packet.resources)
-    //      std::cout << r << '\n';
 
   } catch (out_of_range& e) {
     cerr << e.what() << '\n';

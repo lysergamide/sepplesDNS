@@ -1,10 +1,9 @@
 #pragma once
 
-#include <PacketBuffer.hpp>
+#include <ByteBuffer.hpp>
 #include <QueryType.hpp>
 
 #include <array>
-#include <string>
 #include <variant>
 
 /// @brief DNS record class
@@ -17,7 +16,7 @@ struct DnsRecord {
   QueryType qtype;
   uint16_t  data_len;
 
-  DnsRecord(PacketBuffer& buffer);
+  DnsRecord(ByteBuffer& buffer);
 };
 
 template <> struct fmt::formatter<DnsRecord> : fmt::formatter<std::string> {
@@ -49,7 +48,8 @@ template <> struct fmt::formatter<DnsRecord> : fmt::formatter<std::string> {
         "\n  Domain: {}"
         "\n  Query Type: {}"
         "\n  data_len: {}"
-        "\n  ttl: {}",
+        "\n  ttl: {}"
+        "\n}}",
         r.domain,
         r.qtype,
         r.data_len,
@@ -58,6 +58,6 @@ template <> struct fmt::formatter<DnsRecord> : fmt::formatter<std::string> {
     }
     }
 
-    return formatter<string>::format(fstr, ctx);
+    return fmt::formatter<std::string>::format(fstr, ctx);
   }
 };

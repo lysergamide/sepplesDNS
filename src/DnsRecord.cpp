@@ -7,7 +7,7 @@
  * the buffer
  * @param buffer packet buffer
  */
-DnsRecord::DnsRecord(PacketBuffer& buffer)
+DnsRecord::DnsRecord(ByteBuffer& buffer)
 {
   domain = buffer.read_qname();
   qtype  = QueryType::from_num(buffer.read_u16());

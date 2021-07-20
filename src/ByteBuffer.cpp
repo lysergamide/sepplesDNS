@@ -1,19 +1,19 @@
-#include <PacketBuffer.hpp>
+#include <ByteBuffer.hpp>
 
 #include <iostream>
 #include <stdexcept>
 
 /// @param step amount to increment #pos by
-auto PacketBuffer::step(const size_t step) -> void { pos += step; }
+auto ByteBuffer::step(const size_t step) -> void { pos += step; }
 /// @param next_pos position to move #pos to
-auto PacketBuffer::seek(const size_t next_pos) -> void { pos = next_pos; }
+auto ByteBuffer::seek(const size_t next_pos) -> void { pos = next_pos; }
 
 /**
  * @brief read a byte #pos is incremented
  * @exception std::out_of_range
  * @return uint8_t
  */
-auto PacketBuffer::read() -> uint8_t
+auto ByteBuffer::read() -> uint8_t
 {
   if (pos >= 512)
     throw std::out_of_range("#pos out of bounds");
@@ -27,7 +27,7 @@ auto PacketBuffer::read() -> uint8_t
  * @exception std::out_of_range
  * @return uint8_t
  */
-auto PacketBuffer::get(size_t i) const -> uint8_t
+auto ByteBuffer::get(size_t i) const -> uint8_t
 {
   if (i >= 512)
     throw std::out_of_range("index out of bounds");
@@ -42,7 +42,7 @@ auto PacketBuffer::get(size_t i) const -> uint8_t
  * @exception std::out_of_range
  * @return std::string_view
  */
-auto PacketBuffer::get_range(const size_t start, const size_t size) const
+auto ByteBuffer::get_range(const size_t start, const size_t size) const
   -> std::string_view
 {
   if (start + size >= 512)
@@ -51,17 +51,17 @@ auto PacketBuffer::get_range(const size_t start, const size_t size) const
   return std::string_view(reinterpret_cast<const char*>(&buffer[start]), size);
 }
 
-/// @brief construct a new PacketBuffer
-PacketBuffer::PacketBuffer() : buffer { 0 }, pos { 0 } {};
+/// @brief construct a new ByteBuffer
+ByteBuffer::ByteBuffer() : buffer { 0 }, pos { 0 } {};
 /// @return #pos
-auto PacketBuffer::get_pos() const -> size_t { return pos; }
+auto ByteBuffer::get_pos() const -> size_t { return pos; }
 
 /**
  * @brief read two bytes, #pos is incremented
  * @exception std::out_of_range
  * @return uint32_t
  */
-auto PacketBuffer::read_u16() -> uint16_t
+auto ByteBuffer::read_u16() -> uint16_t
 {
   const auto a = uint16_t { read() };
   const auto b = uint16_t { read() };
@@ -73,7 +73,7 @@ auto PacketBuffer::read_u16() -> uint16_t
  * @exception std::out_of_range
  * @return uint32_t
  */
-auto PacketBuffer::read_u32() -> uint32_t
+auto ByteBuffer::read_u32() -> uint32_t
 {
   auto ret = uint32_t { 0 };
 
@@ -89,7 +89,7 @@ auto PacketBuffer::read_u32() -> uint32_t
  * @brief read a query name (domain)
  * @return std::string the domain name
  */
-auto PacketBuffer::read_qname() -> std::string
+auto ByteBuffer::read_qname() -> std::string
 {
   const auto MAX_JUMPS = 5;
 

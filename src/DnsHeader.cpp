@@ -20,13 +20,13 @@ DnsHeader::DnsHeader()
 {}
 
 /**
- * @brief Construct a new Dns Header object from a PacketBuffer
+ * @brief Construct a new Dns Header object from a ByteBuffer
  *
  * @tparam PB a packet buffer
  * @exception std::out_of_range if there is a problem reading the buffer
  * @param buffer
  */
-DnsHeader::DnsHeader(PacketBuffer& buffer) : id { buffer.read_u16() }
+DnsHeader::DnsHeader(ByteBuffer& buffer) : id { buffer.read_u16() }
 {
   const auto flags = buffer.read_u16();
   const auto upper = flags >> 8;

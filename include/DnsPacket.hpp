@@ -13,5 +13,5 @@ struct DnsPacket {
   std::vector<DnsRecord>   authorities;
   std::vector<DnsRecord>   resources;
 
-  DnsPacket(PacketBuffer& buffer);
+  DnsPacket(ByteBuffer& buffer);
 };

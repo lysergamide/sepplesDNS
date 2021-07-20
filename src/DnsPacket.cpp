@@ -1,6 +1,6 @@
 #include <DnsPacket.hpp>
 
-DnsPacket::DnsPacket(PacketBuffer& buffer)
+DnsPacket::DnsPacket(ByteBuffer& buffer)
     : header { buffer }
     , questions {}
     , answers {}

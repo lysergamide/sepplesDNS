@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PacketBuffer.hpp>
+#include <ByteBuffer.hpp>
 #include <ResultCode.hpp>
 
 #include <fmt/format.h>
@@ -27,7 +27,7 @@ struct DnsHeader {
   uint16_t resource_entries;
 
   DnsHeader();
-  DnsHeader(PacketBuffer&);
+  DnsHeader(ByteBuffer&);
 };
 
 // fmt thing
@@ -69,6 +69,6 @@ template <> struct fmt::formatter<DnsHeader> : fmt::formatter<std::string> {
       h.authoritative_entries,
       h.resource_entries);
 
-    return formatter<string>::format(fstr, ctx);
+    return fmt::formatter<std::string>::format(fstr, ctx);
   }
 };

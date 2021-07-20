@@ -6,7 +6,7 @@
 /**
  * @brief Class for holding and processing packets
  */
-class PacketBuffer
+class ByteBuffer
 {
  private:
   size_t pos;
@@ -19,7 +19,7 @@ class PacketBuffer
  public:
   std::array<uint8_t, 512> buffer;
 
-  PacketBuffer();
+  ByteBuffer();
 
   auto step(const size_t) -> void;
   auto get_pos() const -> size_t;

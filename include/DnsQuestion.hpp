@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PacketBuffer.hpp>
+#include <ByteBuffer.hpp>
 #include <QueryType.hpp>
 
 #include <fmt/format.h>
@@ -10,7 +10,7 @@ struct DnsQuestion {
   QueryType   qtype;
 
   DnsQuestion(std::string_view, const QueryType);
-  DnsQuestion(PacketBuffer& buffer);
+  DnsQuestion(ByteBuffer& buffer);
 };
 
 template <> struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string> {
@@ -25,6 +25,6 @@ template <> struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string> {
       q.name,
       q.qtype);
 
-    return formatter<string>::format(fstr, ctx);
+    return fmt::formatter<std::string>::format(fstr, ctx);
   }
 };

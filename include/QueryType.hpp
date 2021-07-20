@@ -22,7 +22,7 @@ template <> struct fmt::formatter<QueryType> : fmt::formatter<std::string> {
   template <typename FormatContext>
   auto format(const QueryType& q, FormatContext& ctx)
   {
-    auto str = std::string_view {};
+    auto str = std::string {};
     switch (q.type) {
     case QueryType::A: str = "A"; break;
     default: str = "Unknown"; break;
