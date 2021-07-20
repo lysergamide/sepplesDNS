@@ -1,30 +1,23 @@
 #include <DnsRecord.hpp>
 
-#include <iostream>
-#include <variant>
-
-// debug info
-
-auto operator<<(std::ostream& os, const DnsRecord& r) -> std::ostream&
+/**
+ * @brief Construct a new Dns Record object
+ * @tparam PB
+ * @exception std::out_of_range can throw if there is a problem with reading
+ * the buffer
+ * @param buffer packet buffer
+ */
+DnsRecord::DnsRecord(PacketBuffer& buffer)
 {
-  os << "<DNS Record: {\n";
+  domain = buffer.read_qname();
+  qtype  = QueryType::from_num(buffer.read_u16());
+  buffer.read_u16();
+  ttl      = buffer.read_u32();
+  data_len = buffer.read_u16();
 
-  // ugly
-  std::visit(overloaded { [&](const DnsRecord::A& a) -> void {
-                           os << "  Domain: " << a.domain << '\n' << "  ipv4: ";
-                           for (auto i = 0; i < 3; ++i)
-                             os << a.ipv4Addr[i] << ".";
-                           os << a.ipv4Addr[3] << '\n';
-                         },
-                          [&](const DnsRecord::Unknown& u) -> void {
-                            os << "  Domain: " << u.domain << '\n'
-                               << "  Query Type: " << u.qtype << '\n'
-                               << "  data_len: " << u.data_len << '\n'
-                               << "  ttl: " << u.ttl << '\n';
-                          } },
-             r.record);
-
-  os << "}>";
-
-  return os;
+  if (qtype.type != QueryType::Unknown) {
+    const auto raw_addr = buffer.read_u32();
+    for (auto i = 0; i < 4; ++i)
+      ipv4Addr[3 - i] = (raw_addr >> (8 * i)) & 0xff;
+  }
 }

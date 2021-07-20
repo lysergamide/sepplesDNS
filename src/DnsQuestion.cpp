@@ -1,10 +1,13 @@
 #include <DnsQuestion.hpp>
 
-auto operator<<(std::ostream& os, const DnsQuestion& q) -> std::ostream&
+DnsQuestion::DnsQuestion(std::string_view n, const QueryType q)
+    : name { n }
+    , qtype { q }
+{}
+
+DnsQuestion::DnsQuestion(PacketBuffer& buffer)
+    : name { buffer.read_qname() }
+    , qtype { QueryType::from_num(buffer.read_u16()) }
 {
-  os << "<DNS Question: {\n"
-     << "  Name: " << q.name << '\n'
-     << "  Query type: " << q.qtype << '\n'
-     << "}>";
-  return os;
+  buffer.read_u16();
 }

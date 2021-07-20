@@ -1,29 +1,33 @@
 #pragma once
 
+#include <fmt/format.h>
+
 #include <cstdint>
-#include <variant>
 #include <iostream>
+#include <variant>
 
-class QueryType
-{
- public:
-  class Unknown
-  {
-   public:
-    uint16_t num;
-    Unknown(const uint16_t);
-  };
+// struct for querytypes
+struct QueryType {
+  enum qtype { Unknown, A };
+  qtype type;
 
-  class A
-  {};
-
-  std::variant<A, Unknown> type;
-
+  QueryType();
   QueryType(const uint16_t);
 
-  auto to_num() const -> uint16_t;
-
+  auto        to_num() const -> uint16_t;
   static auto from_num(const uint16_t) -> QueryType;
+};
 
-  friend auto operator<<(std::ostream&, const QueryType&) -> std::ostream&;
+template <> struct fmt::formatter<QueryType> : fmt::formatter<std::string> {
+  template <typename FormatContext>
+  auto format(const QueryType& q, FormatContext& ctx)
+  {
+    auto str = std::string_view {};
+    switch (q.type) {
+    case QueryType::A: str = "A"; break;
+    default: str = "Unknown"; break;
+    }
+
+    return fmt::formatter<std::string>::format(fmt::format("{}", str), ctx);
+  }
 };

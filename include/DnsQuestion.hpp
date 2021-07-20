@@ -3,27 +3,28 @@
 #include <PacketBuffer.hpp>
 #include <QueryType.hpp>
 
-#include <string>
+#include <fmt/format.h>
 
-class DnsQuestion
-{
- private:
+struct DnsQuestion {
   std::string name;
   QueryType   qtype;
 
- public:
-  template <class S, class QT>
-  DnsQuestion(const S&& n, const QT&& q) : name { n }
-                                         , qtype { q }
-  {}
+  DnsQuestion(std::string_view, const QueryType);
+  DnsQuestion(PacketBuffer& buffer);
+};
 
-  template <class PB>
-  DnsQuestion(PB&& buffer)
-      : name { buffer.read_qname() }
-      , qtype { QueryType::from_num(buffer.read_u16()) }
+template <> struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string> {
+  template <typename FormatContext>
+  auto format(const DnsQuestion& q, FormatContext& ctx)
   {
-    buffer.read_u16();
-  }
+    const auto fstr = fmt::format(
+      "DNS Question: {{"
+      "\n  name: {}"
+      "\n  qtype: {}"
+      "\n}}",
+      q.name,
+      q.qtype);
 
-  friend auto operator<<(std::ostream&, const DnsQuestion&) -> std::ostream&;
+    return formatter<string>::format(fstr, ctx);
+  }
 };

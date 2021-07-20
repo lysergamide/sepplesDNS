@@ -26,6 +26,4 @@ class PacketBuffer
   auto read_u16() -> uint16_t;
   auto read_u32() -> uint32_t;
   auto read_qname() -> std::string;
-
-  friend auto operator<<(std::ostream&, const PacketBuffer&) -> std::ostream&;
 };

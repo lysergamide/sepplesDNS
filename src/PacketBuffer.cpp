@@ -132,15 +132,3 @@ auto PacketBuffer::read_qname() -> std::string
 
   return ret;
 }
-
-/// @brief make the class printable
-auto operator<<(std::ostream& os, const PacketBuffer& pb) -> std::ostream&
-{
-  os << "<PacketBuffer{ Pos:" << pb.pos << ", Buffer: [";
-  std::copy(pb.buffer.begin(),
-            pb.buffer.end(),
-            std::ostream_iterator<int>(os, " "));
-  os << "] }>";
-
-  return os;
-}
