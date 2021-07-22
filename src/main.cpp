@@ -2,9 +2,7 @@
 
 #include <fmt/printf.h>
 
-#include <algorithm>
 #include <fstream>
-#include <iterator>
 
 auto main() -> int
 {
@@ -12,25 +10,13 @@ auto main() -> int
   using namespace fmt;
 
   try {
-    auto pb = ByteBuffer {};
-    auto fs = ifstream("query_packet.txt", ios_base::binary);
+    auto fs = ifstream("D:/Projects/sepplesDNS/build/Debug/query_packet",
+                       ios_base::binary);
+    auto packet = DnsPacket(fs);
 
-    copy(istream_iterator<char>(fs),
-         istream_iterator<char>(),
-         pb.buffer.begin());
-
-    auto packet = DnsPacket(pb);
-    print("{}\n", packet.header);
-    for (auto& q : packet.questions)
-      print("{}\n", q);
-
-    for (const auto& r :
-         { packet.answers, packet.authorities, packet.resources }) {
-      for (const auto& x : r)
-        print("{}\n", x);
-    }
+    print("{}", packet);
 
   } catch (out_of_range& e) {
-    cerr << e.what() << '\n';
+    print(stderr, "{}\n", e.what());
   }
 }

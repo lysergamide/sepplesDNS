@@ -16,21 +16,21 @@ auto from_num(const unsigned x) -> Code;
 }  // namespace ResultCode
 
 template <>
-struct fmt::formatter<ResultCode::Code> : fmt::formatter<std::string> {
+struct fmt::formatter<ResultCode::Code> : fmt::formatter<std::string_view> {
   template <typename FormatContext>
   auto format(const ResultCode::Code c, FormatContext& ctx)
   {
-    auto str = std::string { "" };
+    auto str = std::string_view{ "" };
 
     switch (c) {
-      case ResultCode::NOERROR: str = std::string { "NOERROR" }; break;
-      case ResultCode::FORMERR: str = std::string { "FORMERR" }; break;
-      case ResultCode::SERVFAIL: str = std::string { "SERVFAIL" }; break;
-      case ResultCode::NXDOMAIN: str = std::string { "NXDOMAIN" }; break;
-      case ResultCode::NOTIMP: str = std::string { "NOTIMP" }; break;
-      case ResultCode::REFUSED: str = std::string { "REFUSED" }; break;
+      case ResultCode::NOERROR: str = "NOERROR"; break;
+      case ResultCode::FORMERR: str = "FORMERR"; break;
+      case ResultCode::SERVFAIL: str = "SERVFAIL"; break;
+      case ResultCode::NXDOMAIN: str = "NXDOMAIN"; break;
+      case ResultCode::NOTIMP: str = "NOTIMP"; break;
+      case ResultCode::REFUSED: str = "REFUSED"; break;
     }
 
-    return fmt::formatter<std::string>::format(str, ctx);
+    return fmt::formatter<std::string_view>::format(str, ctx);
   }
 };

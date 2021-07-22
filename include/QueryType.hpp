@@ -18,16 +18,18 @@ struct QueryType {
   static auto from_num(const uint16_t) -> QueryType;
 };
 
-template <> struct fmt::formatter<QueryType> : fmt::formatter<std::string> {
+template <>
+struct fmt::formatter<QueryType> : fmt::formatter<std::string_view> {
   template <typename FormatContext>
   auto format(const QueryType& q, FormatContext& ctx)
   {
-    auto str = std::string {};
+    auto str = std::string_view{};
     switch (q.type) {
-    case QueryType::A: str = "A"; break;
-    default: str = "Unknown"; break;
+      case QueryType::A: str = "A"; break;
+      default: str = "Unknown"; break;
     }
 
-    return fmt::formatter<std::string>::format(fmt::format("{}", str), ctx);
+    return fmt::formatter<std::string_view>::format(fmt::format("{}", str),
+                                                    ctx);
   }
 };

@@ -1,10 +1,8 @@
 #include <ByteBuffer.hpp>
 
-#include <iostream>
+#include <iterator>
 #include <stdexcept>
 
-/// @param step amount to increment #pos by
-auto ByteBuffer::step(const size_t step) -> void { pos += step; }
 /// @param next_pos position to move #pos to
 auto ByteBuffer::seek(const size_t next_pos) -> void { pos = next_pos; }
 
@@ -43,16 +41,30 @@ auto ByteBuffer::get(size_t i) const -> uint8_t
  * @return std::string_view
  */
 auto ByteBuffer::get_range(const size_t start, const size_t size) const
-  -> std::string_view
+  -> std::string
 {
   if (start + size >= 512)
     throw std::out_of_range("range out of bounds");
 
-  return std::string_view(reinterpret_cast<const char*>(&buffer[start]), size);
+  return std::string(buffer.begin() + start, buffer.begin() + start + size);
 }
 
 /// @brief construct a new ByteBuffer
-ByteBuffer::ByteBuffer() : buffer { 0 }, pos { 0 } {};
+ByteBuffer::ByteBuffer() : buffer{ 0 }, pos{ 0 } {};
+
+/**
+ * @brief Construct a new Byte Buffer object from a file
+ * @param fs file stream
+ */
+ByteBuffer::ByteBuffer(std::ifstream& fs) : ByteBuffer()
+{
+  std::copy(std::istream_iterator<uint8_t>(fs),
+            std::istream_iterator<uint8_t>(),
+            buffer.begin());
+}
+
+/// @param step amount to increment #pos by
+auto ByteBuffer::step(const size_t step) -> void { pos += step; }
 /// @return #pos
 auto ByteBuffer::get_pos() const -> size_t { return pos; }
 
@@ -63,8 +75,8 @@ auto ByteBuffer::get_pos() const -> size_t { return pos; }
  */
 auto ByteBuffer::read_u16() -> uint16_t
 {
-  const auto a = uint16_t { read() };
-  const auto b = uint16_t { read() };
+  const auto a = uint16_t{ read() };
+  const auto b = uint16_t{ read() };
   return (a << 8) | b;
 }
 
@@ -75,7 +87,7 @@ auto ByteBuffer::read_u16() -> uint16_t
  */
 auto ByteBuffer::read_u32() -> uint32_t
 {
-  auto ret = uint32_t { 0 };
+  auto ret = uint32_t{ 0 };
 
   for (auto i = 0; i < 4; i++) {
     ret <<= 8;
@@ -91,34 +103,35 @@ auto ByteBuffer::read_u32() -> uint32_t
  */
 auto ByteBuffer::read_qname() -> std::string
 {
-  const auto MAX_JUMPS = 5;
+  const auto MAX_JUMPS = 5;  // prevent inf loop from malicious packets
 
   auto p      = pos;  // duplicate pointer to handle jumps
   auto jumps  = 0;
   auto jumped = false;
-  auto delim  = std::string { "" };
-  auto ret    = std::string { "" };  // string to be returned
+  auto delim  = std::string_view{ "" };
+  auto ret    = std::string{ "" };  // string to be returned
 
   for (;;) {
-    // guards against malicious packets
     if (jumps > MAX_JUMPS)
       throw std::out_of_range("Packet exceeded maximum number of jumps");
 
-    // check if length byte is a jump instruction
     auto len = get(p);
+
+    // jump instruction
     if ((len & 0xc0) == 0xc0) {
-      // update buffer position, only needs to be done the first time we jump
       if (!jumped)
         seek(p + 2);
 
-      p      = ((static_cast<uint16_t>(len) ^ 0xc0) << 8) | get(p + 1);
+      const auto b1 = uint16_t{ ((static_cast<uint16_t>(len) ^ 0xc0u) << 8) };
+      const auto b2 = uint16_t{ get(p + 1) };
+
+      p      = b1 | b2;
       jumped = true;
       ++jumps;
     } else {
       ++p;
-
-      if (len == 0)
-        break;  // strings are null terminated
+      if (!len)
+        break;
 
       ret.append(delim);
       ret.append(get_range(p, len));

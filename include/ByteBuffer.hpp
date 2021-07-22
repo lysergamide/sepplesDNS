@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <fstream>
 #include <string>
 
 /**
@@ -9,17 +10,17 @@
 class ByteBuffer
 {
  private:
-  size_t pos;
+  size_t                   pos;
+  std::array<uint8_t, 512> buffer;
 
   auto seek(const size_t) -> void;
   auto get(const size_t) const -> uint8_t;
   auto read() -> uint8_t;
-  auto get_range(const size_t, const size_t) const -> std::string_view;
+  auto get_range(const size_t, const size_t) const -> std::string;
 
  public:
-  std::array<uint8_t, 512> buffer;
-
   ByteBuffer();
+  ByteBuffer(std::ifstream&);
 
   auto step(const size_t) -> void;
   auto get_pos() const -> size_t;

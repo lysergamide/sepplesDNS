@@ -31,44 +31,44 @@ struct DnsHeader {
 };
 
 // fmt thing
-template <> struct fmt::formatter<DnsHeader> : fmt::formatter<std::string> {
+template <>
+struct fmt::formatter<DnsHeader> : fmt::formatter<std::string_view> {
   template <typename FormatContext>
   auto format(const DnsHeader& h, FormatContext& ctx)
   {
-    const auto fstr = fmt::format(
-      "DNS Header: {{"
-      "\n  id: {}"
-      "\n  recursion desired: {}"
-      "\n  truncated_message: {}"
-      "\n  authoritative_answer: {}"
-      "\n  opcode: {}"
-      "\n  response: {}"
-      "\n  rescode: {}"
-      "\n  checking_disabled: {}"
-      "\n  authed_data: {}"
-      "\n  z: {}"
-      "\n  recursion_available: {}"
-      "\n  questions: {}"
-      "\n  answers: {}"
-      "\n  authoritative_entries: {}"
-      "\n  resource_entries: {}"
-      "\n}}",
-      h.id,
-      h.recursion_desired,
-      h.truncated_message,
-      h.authoritative_answer,
-      h.opcode,
-      h.response,
-      h.rescode,
-      h.checking_disabled,
-      h.authed_data,
-      h.z,
-      h.recursion_available,
-      h.questions,
-      h.answers,
-      h.authoritative_entries,
-      h.resource_entries);
+    const auto fstr = fmt::format("DNS Header: {{"
+                                  "\n  id: {}"
+                                  "\n  recursion desired: {}"
+                                  "\n  truncated_message: {}"
+                                  "\n  authoritative_answer: {}"
+                                  "\n  opcode: {}"
+                                  "\n  response: {}"
+                                  "\n  rescode: {}"
+                                  "\n  checking_disabled: {}"
+                                  "\n  authed_data: {}"
+                                  "\n  z: {}"
+                                  "\n  recursion_available: {}"
+                                  "\n  questions: {}"
+                                  "\n  answers: {}"
+                                  "\n  authoritative_entries: {}"
+                                  "\n  resource_entries: {}"
+                                  "\n}}",
+                                  h.id,
+                                  h.recursion_desired,
+                                  h.truncated_message,
+                                  h.authoritative_answer,
+                                  h.opcode,
+                                  h.response,
+                                  h.rescode,
+                                  h.checking_disabled,
+                                  h.authed_data,
+                                  h.z,
+                                  h.recursion_available,
+                                  h.questions,
+                                  h.answers,
+                                  h.authoritative_entries,
+                                  h.resource_entries);
 
-    return fmt::formatter<std::string>::format(fstr, ctx);
+    return fmt::formatter<std::string_view>::format(fstr, ctx);
   }
 };

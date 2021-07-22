@@ -16,48 +16,48 @@ struct DnsRecord {
   QueryType qtype;
   uint16_t  data_len;
 
+  DnsRecord();
   DnsRecord(ByteBuffer& buffer);
 };
 
-template <> struct fmt::formatter<DnsRecord> : fmt::formatter<std::string> {
+template <>
+struct fmt::formatter<DnsRecord> : fmt::formatter<std::string_view> {
   template <typename FormatContext>
   auto format(const DnsRecord& r, FormatContext& ctx)
   {
     auto fstr = fmt::format("");
 
     switch (r.qtype.to_num()) {
-    case QueryType::A: {
-      auto ip = std::string {};
-      for (size_t i = 0; i < 3; ++i)
-        ip += std::to_string(r.ipv4Addr[i]) + ".";
-      ip.append(std::to_string(r.ipv4Addr[3]));
+      case QueryType::A: {
+        auto ip = std::string{};
+        for (size_t i = 0; i < 3; ++i)
+          ip += std::to_string(r.ipv4Addr[i]) + ".";
+        ip.append(std::to_string(r.ipv4Addr[3]));
 
-      fstr = fmt::format(
-        "DNS Record {{"
-        "\n  Domain: {}"
-        "\n  ipv4: {}"
-        "\n}}",
-        r.domain,
-        ip);
-      break;
+        fstr = fmt::format("DNS Record {{"
+                           "\n  Domain: {}"
+                           "\n  ipv4: {}"
+                           "\n}}",
+                           r.domain,
+                           ip);
+        break;
+      }
+
+      default: {
+        fstr = fmt::format("DNS Record {{"
+                           "\n  Domain: {}"
+                           "\n  Query Type: {}"
+                           "\n  data_len: {}"
+                           "\n  ttl: {}"
+                           "\n}}",
+                           r.domain,
+                           r.qtype,
+                           r.data_len,
+                           r.ttl);
+        break;
+      }
     }
 
-    default: {
-      fstr = fmt::format(
-        "DNS Record {{"
-        "\n  Domain: {}"
-        "\n  Query Type: {}"
-        "\n  data_len: {}"
-        "\n  ttl: {}"
-        "\n}}",
-        r.domain,
-        r.qtype,
-        r.data_len,
-        r.ttl);
-      break;
-    }
-    }
-
-    return fmt::formatter<std::string>::format(fstr, ctx);
+    return fmt::formatter<std::string_view>::format(fstr, ctx);
   }
 };
