@@ -19,6 +19,7 @@ class DnsPacket
  public:
   DnsPacket();
   DnsPacket(ByteBuffer&);
+  DnsPacket(ByteBuffer&&);
   DnsPacket(std::ifstream&);
   friend fmt::formatter<DnsPacket>;
 };
