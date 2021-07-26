@@ -4,7 +4,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 if (WIN32)
   add_subdirectory(lib/fmt)
-endif(WIN32)
+endif (WIN32)
+
+if (UNIX)
+  find_package(fmt)
+endif (UNIX)
 
 include_directories(include)
 
