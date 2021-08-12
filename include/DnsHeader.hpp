@@ -5,7 +5,7 @@
 
 #include <fmt/format.h>
 
-/// @brief struct to hold a dns header
+/// @brief struct representing a dns header
 struct DnsHeader {
   uint16_t id;
 
@@ -33,8 +33,7 @@ struct DnsHeader {
 // fmt thing
 template <>
 struct fmt::formatter<DnsHeader> : fmt::formatter<std::string_view> {
-  template <typename FormatContext>
-  auto format(const DnsHeader& h, FormatContext& ctx)
+  auto format(const DnsHeader& h, format_context& ctx)
   {
     const auto fstr = fmt::format("DNS Header: {{"
                                   "\n  id: {}"

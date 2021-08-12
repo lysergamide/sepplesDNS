@@ -17,8 +17,7 @@ auto from_num(const unsigned x) -> Code;
 
 template <>
 struct fmt::formatter<ResultCode::Code> : fmt::formatter<std::string_view> {
-  template <typename FormatContext>
-  auto format(const ResultCode::Code c, FormatContext& ctx)
+  auto format(const ResultCode::Code c, format_context& ctx)
   {
     auto str = std::string_view{ "" };
 

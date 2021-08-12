@@ -6,7 +6,7 @@
 #include <iostream>
 #include <variant>
 
-// struct for querytypes
+/// @brief a struct to handle query types
 struct QueryType {
   enum qtype { Unknown, A };
   qtype type;
@@ -20,8 +20,7 @@ struct QueryType {
 
 template <>
 struct fmt::formatter<QueryType> : fmt::formatter<std::string_view> {
-  template <typename FormatContext>
-  auto format(const QueryType& q, FormatContext& ctx)
+  auto format(const QueryType& q, format_context& ctx)
   {
     auto str = std::string_view{};
     switch (q.type) {

@@ -6,7 +6,7 @@
 #include <array>
 #include <variant>
 
-/// @brief DNS record class
+/// @brief a struct representing a dns record
 struct DnsRecord {
   std::string            domain;
   std::array<uint8_t, 4> ipv4Addr;
@@ -22,8 +22,7 @@ struct DnsRecord {
 
 template <>
 struct fmt::formatter<DnsRecord> : fmt::formatter<std::string_view> {
-  template <typename FormatContext>
-  auto format(const DnsRecord& r, FormatContext& ctx)
+  auto format(const DnsRecord& r, format_context& ctx)
   {
     auto fstr = fmt::format("");
 

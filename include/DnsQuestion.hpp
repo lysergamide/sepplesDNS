@@ -5,6 +5,7 @@
 
 #include <fmt/format.h>
 
+/// @brief a struct representing a dns question
 struct DnsQuestion {
   std::string name;
   QueryType   qtype;
@@ -16,8 +17,7 @@ struct DnsQuestion {
 
 template <>
 struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string_view> {
-  template <typename FormatContext>
-  auto format(const DnsQuestion& q, FormatContext& ctx)
+  auto format(const DnsQuestion& q, format_context& ctx)
   {
     const auto fstr = fmt::format("DNS Question: {{"
                                   "\n  Query Type: {}"

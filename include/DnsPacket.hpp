@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 
+/// @brief a class representing a dns packet
 class DnsPacket
 {
  private:
@@ -26,8 +27,7 @@ class DnsPacket
 
 template <>
 struct fmt::formatter<DnsPacket> : fmt::formatter<std::string_view> {
-  template <typename FormatContext>
-  auto format(const DnsPacket& p, FormatContext& ctx)
+  auto format(const DnsPacket& p, format_context& ctx)
   {
     const auto fstr = fmt::format("{} {} {} {} {}",
                                   p.header,
