@@ -15,7 +15,7 @@ auto main(int argc, char** argv) -> int
   }
 
   try {
-    auto fs     = ifstream(argv[1]);
+    auto fs     = ifstream(argv[1], ios_base::binary);
     auto packet = DnsPacket(fs);
 
     print("{}", packet);

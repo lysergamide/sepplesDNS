@@ -14,13 +14,14 @@ struct DnsQuestion {
   DnsQuestion(ByteBuffer& buffer);
 };
 
-template <> struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string_view> {
+template <>
+struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string_view> {
   template <typename FormatContext>
   auto format(const DnsQuestion& q, FormatContext& ctx)
   {
     const auto fstr = fmt::format("DNS Question: {{"
+                                  "\n  Query Type: {}"
                                   "\n  name: {}"
-                                  "\n  qtype: {}"
                                   "\n}}",
                                   q.name,
                                   q.qtype);

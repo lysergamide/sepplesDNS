@@ -58,8 +58,8 @@ ByteBuffer::ByteBuffer() : buffer{ 0 }, pos{ 0 } {};
  */
 ByteBuffer::ByteBuffer(std::ifstream& fs) : ByteBuffer()
 {
-  std::copy(std::istream_iterator<uint8_t>(fs),
-            std::istream_iterator<uint8_t>(),
+  std::copy(std::istreambuf_iterator<char>(fs),
+            std::istreambuf_iterator<char>(),
             buffer.begin());
 }
 

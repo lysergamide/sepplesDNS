@@ -29,29 +29,28 @@ struct fmt::formatter<DnsRecord> : fmt::formatter<std::string_view> {
 
     switch (r.qtype.to_num()) {
       case QueryType::A: {
-        auto ip = std::string{};
-        for (size_t i = 0; i < 3; ++i)
-          ip += std::to_string(r.ipv4Addr[i]) + ".";
-        ip.append(std::to_string(r.ipv4Addr[3]));
-
         fstr = fmt::format("DNS Record {{"
+                           "\n  Query Type: {}"
                            "\n  Domain: {}"
                            "\n  ipv4: {}"
+                           "\n  ttl: {}"
                            "\n}}",
+                           r.qtype,
                            r.domain,
-                           ip);
+                           fmt::join(r.ipv4Addr, "."),
+                           r.ttl);
         break;
       }
 
       default: {
         fstr = fmt::format("DNS Record {{"
-                           "\n  Domain: {}"
                            "\n  Query Type: {}"
+                           "\n  Domain: {}"
                            "\n  data_len: {}"
                            "\n  ttl: {}"
                            "\n}}",
-                           r.domain,
                            r.qtype,
+                           r.domain,
                            r.data_len,
                            r.ttl);
         break;
