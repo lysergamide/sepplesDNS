@@ -4,17 +4,18 @@
 
 #include <fstream>
 
-auto main(int argv, char** argv) -> int
+auto main(int argc, char** argv) -> int
 {
   using namespace std;
   using namespace fmt;
-  if (argv < 2) {
+
+  if (argc < 2) {
     fmt::print(stderr, "No filepat");
     return 0;
   }
 
   try {
-    auto fs = ifstream(argv[1], ios_base::binary);
+    auto fs     = ifstream(argv[1]);
     auto packet = DnsPacket(fs);
 
     print("{}", packet);

@@ -46,7 +46,7 @@ auto ByteBuffer::get_range(const size_t start, const size_t size) const
   if (start + size >= 512)
     throw std::out_of_range("range out of bounds");
 
-  return std::string(buffer.begin() + start, buffer.begin() + start + size);
+  return std::string{ buffer.begin() + start, buffer.begin() + start + size };
 }
 
 /// @brief construct a new ByteBuffer
@@ -75,8 +75,8 @@ auto ByteBuffer::get_pos() const -> size_t { return pos; }
  */
 auto ByteBuffer::read_u16() -> uint16_t
 {
-  const auto a = uint16_t{ read() };
-  const auto b = uint16_t{ read() };
+  const auto a = static_cast<uint16_t>(read());
+  const auto b = static_cast<uint16_t>(read());
   return (a << 8) | b;
 }
 
