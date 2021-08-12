@@ -10,7 +10,7 @@ auto main(int argc, char** argv) -> int
   using namespace fmt;
 
   if (argc < 2) {
-    fmt::print(stderr, "No filepat");
+    fmt::print(stderr, "No filepath");
     return 0;
   }
 
