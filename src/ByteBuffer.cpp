@@ -1,4 +1,8 @@
 #include <ByteBuffer.hpp>
+#include <DnsHeader.hpp>
+#include <DnsPacket.hpp>
+#include <DnsQuestion.hpp>
+#include <DnsRecord.hpp>
 
 #include <iterator>
 #include <sstream>
@@ -119,7 +123,7 @@ ByteBuffer::read_u32() -> uint32_t
 }
 
 /**
- * @brief read a query name (domain)
+ * @brief read a query name (domain name)
  * @return std::string the domain name
  */
 auto
@@ -150,9 +154,11 @@ ByteBuffer::read_qname() -> std::string
       p      = b1 | b2;
       jumped = true;
       ++jumps;
+
     } else {
+
       ++p;
-      if (!len)
+      if (!len)  // strings end with a 0 byte
         break;
 
       ret.append(delim);
@@ -176,8 +182,7 @@ ByteBuffer::write_u8(uint8_t x) -> void
   if (pos >= 512)
     throw std::out_of_range("Attempting to write out of bounds");
 
-  buffer[pos] = x;
-  ++pos;
+  buffer[pos++] = x;
 }
 
 /// @brief write two bytes to the buffer
@@ -201,14 +206,104 @@ auto
 ByteBuffer::write_qname(const std::string& str) -> void
 {
   auto ss = std::stringstream {str};
-  for (auto label = std::string {}; std::getline(ss, label, ',');) {
+
+  // goes through the substrings seperated by a '.'
+  for (auto label = std::string {}; std::getline(ss, label, '.');) {
     if (label.size() > 0x3f)
       throw std::out_of_range("Label exceeds 63 chars");
 
     write_u8(static_cast<uint8_t>(label.size()));
+
     for (auto c : label)
       write_u8(c);
 
     write_u8(0);
   }
+}
+
+/**
+ * These helper overloads need to be called in a specific order since they
+ * mutate the buffers #pos
+ */
+
+/**
+ * @brief write a dns header to the buffer
+ * @param h header
+ */
+auto
+ByteBuffer::write(const DnsHeader& h) -> void
+{
+  write_u16(h.id);
+  write_u8(h.recursion_desired
+           | h.truncated_message << 1
+           | h.authoritative_answer << 2
+           | h.opcode << 3
+           | h.truncated_message << 7);
+  write_u8(h.rescode
+           | h.checking_disabled << 4
+           | h.authed_data << 5
+           | h.z << 6
+           | h.recursion_available << 7);
+  write_u16(h.questions);
+  write_u16(h.answers);
+  write_u16(h.authoritative_entries);
+  write_u16(h.resource_entries);
+}
+
+/**
+ * @brief write a dns question to the buffer
+ * @param q dns question
+ */
+auto
+ByteBuffer::write(const DnsQuestion& q) -> void
+{
+  write_qname(q.name);
+  write_u16(q.qtype);
+  write_u16(1);
+}
+
+/**
+ * @brief write a dns record to the buffer
+ * @param r dns record
+ * 
+ * TODO: this might need to change and return something
+ */
+auto
+ByteBuffer::write(const DnsRecord& r) -> void
+{
+  switch (r.qtype) {
+    case QueryType::A:
+      write_qname(r.domain);
+      write_u16(r.qtype);
+      write_u16(1);
+      write_u32(r.ttl);
+      write_u16(4);
+      for (const auto x : r.ipv4Addr)
+        write_u8(x);
+      break;
+
+    default:
+      fmt::print("Skipping record: {}", r);
+      break;
+  }
+}
+
+/**
+ * @brief write the contents of a DnsPacket to the buffer
+ * @param p the packet to write, may mutate #p.header
+ */
+auto
+ByteBuffer::write(DnsPacket& p) -> void
+{
+  p.header.questions             = p.questions.size();
+  p.header.answers               = p.answers.size();
+  p.header.authoritative_entries = p.authorities.size();
+  p.header.resource_entries      = p.resources.size();
+
+  write(p.header);
+  for (const auto& q : p.questions)
+    write(q);
+  for (const auto& records : {p.answers, p.authorities, p.resources})
+    for (const auto& r : records)
+      write(r);
 }

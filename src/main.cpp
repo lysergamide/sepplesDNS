@@ -20,6 +20,7 @@ main(int argc, char** argv) -> int
     auto packet = DnsPacket {fs};
 
     print("{}", packet);
+
   } catch (out_of_range& e) {
     print(stderr, "{}\n", e.what());
   }

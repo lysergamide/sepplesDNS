@@ -37,3 +37,12 @@ QueryType::from_num(const uint16_t x) -> QueryType
 {
   return QueryType(x);
 }
+
+/**
+ * @brief type conversion to uint16_t for convenience
+ * @return uint16_t 
+ */
+QueryType::operator uint16_t() const
+{
+  return to_num();
+}

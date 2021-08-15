@@ -8,7 +8,8 @@
 
 /// @brief a struct to handle query types
 struct QueryType {
-  enum qtype { Unknown, A };
+  enum qtype : uint16_t { Unknown,
+                          A };
   qtype type;
 
   QueryType();
@@ -16,6 +17,8 @@ struct QueryType {
 
   auto        to_num() const -> uint16_t;
   static auto from_num(const uint16_t) -> QueryType;
+
+  operator uint16_t() const;
 };
 
 template <>

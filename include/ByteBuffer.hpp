@@ -42,5 +42,5 @@ class ByteBuffer
   auto read_u32() -> uint32_t;
   auto read_qname() -> std::string;
 
-  auto write(const DnsPacket&) -> void;
+  auto write(DnsPacket&) -> void;
 };

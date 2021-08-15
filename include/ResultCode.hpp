@@ -3,7 +3,7 @@
 
 namespace ResultCode
 {
-enum Code {
+enum Code : uint8_t {
   NOERROR,
   FORMERR,
   SERVFAIL,
@@ -12,7 +12,7 @@ enum Code {
   REFUSED,
 };
 
-auto from_num(const unsigned x) -> Code;
+auto from_num(const uint8_t x) -> Code;
 }  // namespace ResultCode
 
 template <>
