@@ -20,9 +20,10 @@ struct QueryType {
 
 template <>
 struct fmt::formatter<QueryType> : fmt::formatter<std::string_view> {
-  auto format(const QueryType& q, format_context& ctx)
+  auto
+  format(const QueryType& q, format_context& ctx)
   {
-    auto str = std::string_view{};
+    auto str = std::string_view {};
     switch (q.type) {
       case QueryType::A: str = "A"; break;
       default: str = "Unknown"; break;

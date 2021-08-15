@@ -4,7 +4,8 @@
 
 #include <fstream>
 
-auto main(int argc, char** argv) -> int
+auto
+main(int argc, char** argv) -> int
 {
   using namespace std;
   using namespace fmt;
@@ -16,7 +17,7 @@ auto main(int argc, char** argv) -> int
 
   try {
     auto fs     = ifstream(argv[1], ios_base::binary);
-    auto packet = DnsPacket{ fs };
+    auto packet = DnsPacket {fs};
 
     print("{}", packet);
   } catch (out_of_range& e) {

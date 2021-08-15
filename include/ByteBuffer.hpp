@@ -4,6 +4,11 @@
 #include <fstream>
 #include <string>
 
+class DnsPacket;
+struct DnsHeader;
+struct DnsQuestion;
+struct DnsRecord;
+
 /**
  * @brief Class for reading and writting packets
  */
@@ -21,10 +26,10 @@ class ByteBuffer
   auto write_u8(const uint8_t) -> void;
   auto write_u16(const uint16_t) -> void;
   auto write_u32(const uint32_t) -> void;
-  auto write_qname(std::string_view) -> void;
+  auto write_qname(const std::string&) -> void;
 
   auto write(const DnsHeader&) -> void;
-  auto write(const DnsQuestions&) -> void;
+  auto write(const DnsQuestion&) -> void;
   auto write(const DnsRecord&) -> void;
 
  public:

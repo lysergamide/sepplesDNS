@@ -17,14 +17,16 @@ struct DnsQuestion {
 
 template <>
 struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string_view> {
-  auto format(const DnsQuestion& q, format_context& ctx)
+  auto
+  format(const DnsQuestion& q, format_context& ctx)
   {
-    const auto fstr = fmt::format("DNS Question: {{"
-                                  "\n  Query Type: {}"
-                                  "\n  name: {}"
-                                  "\n}}",
-                                  q.name,
-                                  q.qtype);
+    const auto fstr = fmt::format(
+        "DNS Question: {{"
+        "\n  Query Type: {}"
+        "\n  name: {}"
+        "\n}}",
+        q.name,
+        q.qtype);
 
     return fmt::formatter<std::string_view>::format(fstr, ctx);
   }

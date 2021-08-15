@@ -27,7 +27,8 @@ class DnsPacket
 
 template <>
 struct fmt::formatter<DnsPacket> : fmt::formatter<std::string_view> {
-  auto format(const DnsPacket& p, format_context& ctx)
+  auto
+  format(const DnsPacket& p, format_context& ctx)
   {
     const auto fstr = fmt::format("{} {} {} {} {}",
                                   p.header,

@@ -17,9 +17,10 @@ auto from_num(const unsigned x) -> Code;
 
 template <>
 struct fmt::formatter<ResultCode::Code> : fmt::formatter<std::string_view> {
-  auto format(const ResultCode::Code c, format_context& ctx)
+  auto
+  format(const ResultCode::Code c, format_context& ctx)
   {
-    auto str = std::string_view{ "" };
+    auto str = std::string_view {""};
 
     switch (c) {
       case ResultCode::NOERROR: str = "NOERROR"; break;

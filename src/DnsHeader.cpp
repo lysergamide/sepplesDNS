@@ -2,21 +2,21 @@
 
 /// @brief default constructor
 DnsHeader::DnsHeader()
-    : id{ 0u }
-    , recursion_desired{ false }
-    , truncated_message{ false }
-    , authoritative_answer{ false }
-    , opcode{ 0u }
-    , response{ false }
-    , rescode{ ResultCode::NOERROR }
-    , checking_disabled{ false }
-    , authed_data{ false }
-    , z{ false }
-    , recursion_available{ false }
-    , questions{ 0u }
-    , answers{ 0u }
-    , authoritative_entries{ 0u }
-    , resource_entries{ 0u }
+    : id {0u}
+    , recursion_desired {false}
+    , truncated_message {false}
+    , authoritative_answer {false}
+    , opcode {0u}
+    , response {false}
+    , rescode {ResultCode::NOERROR}
+    , checking_disabled {false}
+    , authed_data {false}
+    , z {false}
+    , recursion_available {false}
+    , questions {0u}
+    , answers {0u}
+    , authoritative_entries {0u}
+    , resource_entries {0u}
 {}
 
 /**
@@ -26,7 +26,8 @@ DnsHeader::DnsHeader()
  * @exception std::out_of_range if there is a problem reading the buffer
  * @param buffer
  */
-DnsHeader::DnsHeader(ByteBuffer& buffer) : DnsHeader()
+DnsHeader::DnsHeader(ByteBuffer& buffer)
+    : DnsHeader()
 {
   id = buffer.read_u16();
 

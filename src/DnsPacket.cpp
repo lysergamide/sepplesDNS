@@ -2,18 +2,19 @@
 
 /// @brief default construct a DnsPacket
 DnsPacket::DnsPacket()
-    : header{}
-    , questions{}
-    , answers{}
-    , authorities{}
-    , resources{}
+    : header {}
+    , questions {}
+    , answers {}
+    , authorities {}
+    , resources {}
 {}
 
 /**
  * @brief Construct a new Dns Packet from a packet buffer
  * @param buffer
  */
-DnsPacket::DnsPacket(ByteBuffer& buffer) : DnsPacket()
+DnsPacket::DnsPacket(ByteBuffer& buffer)
+    : DnsPacket()
 {
   header = DnsHeader(buffer);
 
@@ -31,7 +32,8 @@ DnsPacket::DnsPacket(ByteBuffer& buffer) : DnsPacket()
  * @brief Construct a new Dns Packet from a packet buffer
  * @param buffer
  */
-DnsPacket::DnsPacket(ByteBuffer&& buffer) : DnsPacket()
+DnsPacket::DnsPacket(ByteBuffer&& buffer)
+    : DnsPacket()
 {
   header = DnsHeader(buffer);
 
@@ -49,4 +51,6 @@ DnsPacket::DnsPacket(ByteBuffer&& buffer) : DnsPacket()
  * @brief Construct a new Dns Packet object from a file stream
  * @param fs stream
  */
-DnsPacket::DnsPacket(std::ifstream& fs) : DnsPacket{ ByteBuffer(fs) } {}
+DnsPacket::DnsPacket(std::ifstream& fs)
+    : DnsPacket {ByteBuffer(fs)}
+{}

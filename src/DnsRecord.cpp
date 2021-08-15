@@ -2,11 +2,11 @@
 
 /// @brief Construct a new Dns Record object
 DnsRecord::DnsRecord()
-    : domain{ "" }
-    , ipv4Addr{ 0 }
-    , ttl{ 0 }
-    , qtype{ QueryType::Unknown }
-    , data_len{ 0 }
+    : domain {""}
+    , ipv4Addr {0}
+    , ttl {0}
+    , qtype {QueryType::Unknown}
+    , data_len {0}
 {}
 /**
  * @brief Construct a new Dns Record object from a byte buffer
@@ -19,7 +19,9 @@ DnsRecord::DnsRecord(ByteBuffer& buffer)
 {
   domain = buffer.read_qname();
   qtype  = QueryType::from_num(buffer.read_u16());
+
   buffer.read_u16();
+
   ttl      = buffer.read_u32();
   data_len = buffer.read_u16();
 

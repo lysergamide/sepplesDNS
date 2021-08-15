@@ -7,7 +7,8 @@ namespace ResultCode
  * @param x u8 representing a ResultCode
  * @return ResultCode::Code
  */
-auto from_num(const unsigned x) -> Code
+auto
+from_num(const unsigned x) -> Code
 {
   return (x > 5) ? NOERROR : static_cast<Code>(x);
 }
