@@ -4,14 +4,18 @@
 
 #include <fstream>
 
+using namespace std;
+using namespace fmt;
+
 auto
 main(int argc, char** argv) -> int
 {
-  using namespace std;
-  using namespace fmt;
+  auto qname = "google.com"s;
+  auto qtype = QueryType::A;
 
+  /*
   if (argc < 2) {
-    fmt::print(stderr, "No filepath");
+    print(stderr, "No filepath");
     return 0;
   }
 
@@ -24,4 +28,5 @@ main(int argc, char** argv) -> int
   } catch (out_of_range& e) {
     print(stderr, "{}\n", e.what());
   }
+  */
 }
