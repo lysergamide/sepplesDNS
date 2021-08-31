@@ -17,4 +17,4 @@ link_directories(${Boost_LIBRARY_DIRS})
 file (GLOB BINS "src/*.cpp")
 add_executable(sepplesDNS ${BINS})
 
-target_link_libraries(sepplesDNS PUBLIC fmt::fmt ${Boost_LIBRARIES})
+target_link_libraries(sepplesDNS PUBLIC -lpthread fmt::fmt ${Boost_LIBRARIES})
