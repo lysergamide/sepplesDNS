@@ -16,7 +16,6 @@ class ByteBuffer
 {
  private:
   size_t                   pos;
-  std::array<uint8_t, 512> buffer;
 
   auto seek(const size_t) -> void;
   auto get(const size_t) const -> uint8_t;
@@ -33,6 +32,8 @@ class ByteBuffer
   auto write(const DnsRecord&) -> void;
 
  public:
+  std::array<uint8_t, 512> buffer;
+
   ByteBuffer();
   ByteBuffer(std::ifstream&);
 

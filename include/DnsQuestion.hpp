@@ -25,8 +25,8 @@ struct fmt::formatter<DnsQuestion> : fmt::formatter<std::string_view> {
         "\n  Query Type: {}"
         "\n  name: {}"
         "\n}}",
-        q.name,
-        q.qtype);
+        q.qtype,
+        q.name);
 
     return fmt::formatter<std::string_view>::format(fstr, ctx);
   }

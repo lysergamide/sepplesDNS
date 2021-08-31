@@ -8,16 +8,14 @@
 #include <vector>
 
 /// @brief a class representing a dns packet
-class DnsPacket
-{
- private:
+struct DnsPacket {
+
   DnsHeader                header;
   std::vector<DnsQuestion> questions;
   std::vector<DnsRecord>   answers;
   std::vector<DnsRecord>   authorities;
   std::vector<DnsRecord>   resources;
 
- public:
   DnsPacket();
   DnsPacket(ByteBuffer&);
   DnsPacket(ByteBuffer&&);

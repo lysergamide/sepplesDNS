@@ -1,32 +1,46 @@
 #include <DnsPacket.hpp>
 
+#include <boost/asio.hpp>
 #include <fmt/printf.h>
 
 #include <fstream>
 
 using namespace std;
 using namespace fmt;
+using namespace boost;
+using namespace boost::asio::ip;
 
 auto
 main(int argc, char** argv) -> int
 {
-  auto qname = "google.com"s;
-  auto qtype = QueryType::A;
+  auto packet  = DnsPacket {};
+  auto req_buf = ByteBuffer {};
+  auto res_buf = ByteBuffer {};
 
-  /*
-  if (argc < 2) {
-    print(stderr, "No filepath");
-    return 0;
-  }
+  packet.header.id                = 6666;
+  packet.header.questions         = 1;
+  packet.header.recursion_desired = true;
+  packet.questions.emplace_back("google.com"s, QueryType::A);
+
+  req_buf.write(packet);
 
   try {
-    auto fs     = ifstream(argv[1], ios_base::binary);
-    auto packet = DnsPacket {fs};
+    auto ctx       = asio::io_context {};
+    auto sock      = udp::socket {ctx, udp::endpoint {udp::v4(), 43210}};
+    auto end_point = udp::endpoint {make_address("8.8.8.8"), 53};
 
-    print("{}", packet);
+    print("{}\n", packet);
 
-  } catch (out_of_range& e) {
+    sock.send_to(
+        asio::buffer(req_buf.buffer, req_buf.get_pos()),
+        end_point);
+
+    sock.receive_from(
+        asio::buffer(res_buf.buffer),
+        end_point);
+
+    print("{}\n", DnsPacket {res_buf});
+  } catch (std::exception& e) {
     print(stderr, "{}\n", e.what());
   }
-  */
 }
