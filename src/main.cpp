@@ -29,17 +29,14 @@ main(int argc, char** argv) -> int
     auto sock      = udp::socket {ctx, udp::endpoint {udp::v4(), 43210}};
     auto end_point = udp::endpoint {make_address("8.8.8.8"), 53};
 
-    print("{}\n", packet);
-
     sock.send_to(
-        asio::buffer(req_buf.buffer, req_buf.get_pos()),
+        asio::buffer(req_buf.buffer, req_buf.get_pos() + 1),
         end_point);
 
     sock.receive_from(
         asio::buffer(res_buf.buffer),
         end_point);
 
-    print("{}\n", DnsPacket {res_buf});
   } catch (std::exception& e) {
     print(stderr, "{}\n", e.what());
   }
