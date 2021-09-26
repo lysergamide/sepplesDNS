@@ -8,7 +8,7 @@
 
 /// @brief a struct to handle query types
 struct QueryType {
-  enum qtype : uint16_t { Unknown,
+  enum qtype : uint16_t { Unknown = 0,
                           A };
   qtype type;
 

@@ -165,7 +165,7 @@ ByteBuffer::read_qname() -> std::string
       ret.append(get_range(p, len));
       delim = ".";  // start with no delimiter then add dots between
                     // subdomains
-      p += len;
+      p += len + 1;
     }
   }
 
@@ -214,7 +214,7 @@ ByteBuffer::write_qname(const std::string& str) -> void
 
     write_u8(static_cast<uint8_t>(label.size()));
 
-    for (auto c : label)
+    for (const auto c : label)
       write_u8(c);
 
     write_u8(0);
